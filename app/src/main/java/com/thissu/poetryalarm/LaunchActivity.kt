@@ -23,8 +23,6 @@ class LaunchActivity : Activity() {
         DataManager.instance.initAlarmData()
 
 
-
-
         Handler().postDelayed({
 
             val intent = Intent()
