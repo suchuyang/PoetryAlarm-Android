@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thissu.poetryalarm.ActivityModule.AlarmDetailActivity">
+
+    <ImageView
+        android:id="@+id/timeBackImage"
+        android:layout_width="0dp"
+        android:layout_height="320dp"
+        android:background="@mipmap/back1"
+        android:scaleType="center"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/colorAlpha"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/navigationLeftButton"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="13dp"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_back"/>
+
+
+            <Button
+                android:id="@+id/navigationRightButton"
+                android:layout_width="53dp"
+                android:layout_height="35dp"
+                android:textSize="15sp"
+                android:text="确定"
+                android:textColor="@color/colorBlack"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"
+                android:layout_centerVertical="true"
+                android:background="@color/colorAlpha"/>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <!-- 重复模式的按钮 -->
+    <RelativeLayout
+        android:id="@+id/dayOfWeekButtonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/timeBackImage"
+        android:layout_marginBottom="20dp">
+
+        <Button
+            android:id="@+id/monButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="一"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/tuesButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="二"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/monButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/wedButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="三"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/tuesButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/thurButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="四"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/wedButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/friButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="五"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/thurButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/satButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="六"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/friButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick"/>
+        <Button
+            android:id="@+id/sunButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="日"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            android:layout_toRightOf="@id/satButton"
+            android:layout_marginLeft="13dp"
+            android:onClick="weekdayButtonClick" />
+
+    </RelativeLayout>
+
+    <!-- 时间，使用按钮显示方便处理点击事件 -->
+    <Button
+        android:id="@+id/timeButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textColor="@color/colorBlack"
+        android:text="06:78"
+        android:textSize="100sp"
+        android:gravity="center"
+        android:background="@color/colorAlpha"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dayOfWeekButtonContainer"/>
+
+
+    <!--接下来是设置备注，铃声之类的元素 -->
+
+    <EditText
+        android:id="@+id/remarkEdit"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:textColor="#000000"
+        android:hint="输入备注"
+        android:textColorHint="@color/colorGray"
+        android:background="@null"
+        app:layout_constraintTop_toBottomOf="@+id/timeBackImage"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="33dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="13dp"/>
+
+    <View
+        android:id="@+id/midLineView1"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/colorGray"
+        app:layout_constraintTop_toBottomOf="@+id/remarkEdit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    <Button
+        android:id="@+id/ringSelectButton"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@color/colorAlpha"
+        android:text="选择铃声"
+        android:textAlignment="textStart"
+        android:textColor="@color/colorDark"
+        android:drawableLeft="@mipmap/ring"
+        android:drawableRight="@mipmap/triangle_right"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/midLineView1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="13dp"/>
+
+
+
+</android.support.constraint.ConstraintLayout>

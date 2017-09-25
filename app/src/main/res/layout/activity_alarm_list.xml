@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/alarmback01"
+    tools:context="com.thissu.poetryalarm.ActivityModule.AlarmListActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:background="@color/colorAlpha"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/navigationLeftButton"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:textSize="18sp"
+                android:text="测试"
+                android:textColor="@color/colorBlack"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="13dp"
+                android:layout_centerVertical="true"
+                android:background="@color/colorAlpha"
+                android:layout_marginBottom="2dp"/>
+
+
+            <TextView
+                android:id="@+id/navigationTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:layout_centerInParent="true"
+                android:text="古诗闹钟"
+                android:textSize="20sp"
+                android:layout_marginBottom="5dp"/>
+            <Button
+                android:id="@+id/navigationAddButton"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:textSize="18sp"
+                android:text="添加"
+                android:textColor="@color/colorBlack"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"
+                android:layout_centerVertical="true"
+                android:background="@color/colorAlpha"
+                android:layout_marginBottom="2dp"/>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/alarmList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorAlpha"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:descendantFocusability="blocksDescendants"
+        >
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/promptText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:text="温馨提示：\n请保持App进程在后台能够持续运行，否则闹钟将不起作用！"
+        android:background="@color/colorHalfAlpha"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

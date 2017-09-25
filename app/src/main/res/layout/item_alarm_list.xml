@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/itemBack"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorHalfAlpha"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_margin="5dp">
+        <!--第一行，显示时间，闹钟内容，状态-->
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textSize="40sp"
+            android:gravity="center"
+            android:textColor="@color/colorDark"
+            android:text="time"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="13dp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/alarmStateSwitch"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="10dp"
+            android:textOff=""
+            android:textOn=""
+            android:track="@drawable/track"
+            android:thumb="@drawable/thumb"
+            android:switchMinWidth="50dip"
+            android:focusable="false"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/poertyContentText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/colorDark"
+            android:ems="2"
+            android:visibility="gone"
+            android:text="唐诗"
+            app:layout_constraintRight_toLeftOf="@id/alarmStateSwitch"
+            android:layout_marginRight="13dp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--第二行，显示响铃的重复模式，删除按钮-->
+        <TextView
+            android:id="@+id/repeatModeText"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:textColor="@color/colorDark"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:text="每天重复"
+            app:layout_constraintTop_toBottomOf="@id/timeText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="13dp"/>
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@mipmap/delete"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="3dp"
+            android:focusable="false"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+
+
+</android.support.constraint.ConstraintLayout>

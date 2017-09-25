@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--闹的页面-->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thissu.poetryalarm.ActivityModule.AlarmPendingActivity"
+    android:background="#ffffe0">
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/poertyScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="50dp"
+            />
+
+        <TextView
+            android:id="@+id/namePromptText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="诗名："
+            android:textColor="@color/colorGray"
+            app:layout_constraintTop_toTopOf="@id/nameText"
+            app:layout_constraintRight_toLeftOf="@id/nameText"
+            android:layout_marginTop="0dp"/>
+
+        <TextView
+            android:id="@+id/writterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameText"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="13dp"
+            />
+        <TextView
+            android:id="@+id/writterPromptText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="作者："
+            android:textColor="@color/colorGray"
+            app:layout_constraintTop_toTopOf="@id/writterText"
+            app:layout_constraintRight_toLeftOf="@id/writterText"
+            android:layout_marginTop="0dp"/>
+
+        <!--上下两个text，输入框夹在中间。-->
+        <TextView
+            android:id="@+id/bodyPartText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/colorBlack"
+            android:lineSpacingExtra="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/writterText"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="13dp"
+            />
+
+        <EditText
+            android:id="@+id/answerEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack"
+            android:hint="请在这里输入答案"
+            android:textColorHint="@color/colorGray"
+            android:background="@null"
+            android:maxLines="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bodyPartText1"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="13dp"
+            />
+
+        <TextView
+            android:id="@+id/bodyPartText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/colorBlack"
+            android:lineSpacingExtra="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/answerEdit"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="13dp"
+            />
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="确定"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/weekday_button_shape"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bodyPartText2"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="20dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>
