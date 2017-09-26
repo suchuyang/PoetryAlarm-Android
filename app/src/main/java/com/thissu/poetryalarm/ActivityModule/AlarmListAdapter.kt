@@ -1,6 +1,8 @@
 package com.thissu.poetryalarm.ActivityModule
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import com.chaopaikeji.poetryalert.Utility.DebugUtility
 import com.thissu.poetryalarm.Data.AlarmModel
 import com.thissu.poetryalarm.Data.DataManager
 import com.thissu.poetryalarm.R
@@ -34,6 +37,7 @@ class AlarmListAdapter(var datalist:LinkedList<AlarmModel>?, var context:Context
                 holder.timeText = cellview.findViewById(R.id.timeText) as TextView
                 holder.stateSwitch = cellview.findViewById(R.id.alarmStateSwitch) as Switch
                 holder.repeatModeText = cellview.findViewById(R.id.repeatModeText) as TextView
+                holder.deleteButton = cellview.findViewById(R.id.deleteButton) as Button
 
                 cellview.setTag(holder)
             }
@@ -88,6 +92,12 @@ class AlarmListAdapter(var datalist:LinkedList<AlarmModel>?, var context:Context
 
             holder.repeatModeText!!.text = repeatModeStr;
 
+            //删除按钮的动作
+            holder.deleteButton!!.tag = position
+            holder.deleteButton!!.setOnClickListener{ v:View ->
+                deleteAlarmAction(v as Button)
+            }
+
         }
         catch (e:Exception){
 
@@ -120,6 +130,36 @@ class AlarmListAdapter(var datalist:LinkedList<AlarmModel>?, var context:Context
         DataManager.instance.openOrCloseAlarm(button.tag as Int, ischecked)
 
     }
+
+    /**
+     * 删除对应位置的闹钟
+     * */
+    fun deleteAlarmAction(button:Button){
+
+        AlertDialog.Builder(context)
+                .setIcon(R.mipmap.delete)
+                .setTitle("提示")
+                .setMessage("确认删除这个闹钟吗？")
+                .setNegativeButton("取消",DialogInterface.OnClickListener { dialog, which ->
+
+                    DebugUtility.NSLog("点击了取消")
+
+                })
+                .setPositiveButton("确定",DialogInterface.OnClickListener { dialog, which ->
+                    DebugUtility.NSLog("点击了确定")
+
+                    val index = button.tag as Int
+
+                    DataManager.instance.deleteAlarmAtIndex(index = index)
+
+                    this.notifyDataSetChanged()
+
+                })
+                .create()
+                .show()
+
+    }// end of deleteAlarmAction
+
 }
 
 private class ViewHolder{
@@ -130,5 +170,6 @@ private class ViewHolder{
 
     var repeatModeText:TextView? = null
 
+    var deleteButton: Button? = null
 
 }

@@ -97,6 +97,8 @@ class AlarmDetailActivity : Activity() {
             ringSelectButton.text = "铃声：默认"
         }
 
+
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -222,8 +224,13 @@ class AlarmDetailActivity : Activity() {
         }
 
         ringSelectButton.setOnClickListener {
+
+            //注意这里直接操作了全局的currentAlarm，这可能会在以后的操作中导致出现数据莫名其妙被修改的问题。所以在使用这个变量的时候，一定要搞清楚变量的使用范围。
+            DataManager.instance.currentAlarm = currentAlarm
+
             val intent = Intent()
             intent.setClass(this@AlarmDetailActivity,RingtoneSelectActivity::class.java)
+
 
             startActivity(intent)
         }

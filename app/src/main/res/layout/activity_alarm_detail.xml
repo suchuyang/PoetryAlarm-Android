@@ -179,7 +179,7 @@
         app:layout_constraintTop_toBottomOf="@+id/remarkEdit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="13dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
 
@@ -190,6 +190,7 @@
         android:background="@color/colorAlpha"
         android:text="选择铃声"
         android:textAlignment="textStart"
+        android:maxLines="1"
         android:textColor="@color/colorDark"
         android:drawableLeft="@mipmap/ring"
         android:drawableRight="@mipmap/triangle_right"

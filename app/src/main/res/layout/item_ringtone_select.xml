@@ -3,15 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="wrap_content">
 
     <Button
         android:id="@+id/selectButton"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:text="选择"
-        android:textColor="@android:color/black"
-        android:background="@color/colorPrimaryDark"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:background="@mipmap/select"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +23,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorBlack"
         android:maxLines="1"
-        android:background="@color/colorPrimaryDark"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/selectButton"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,8 +39,10 @@
         android:textSize="10sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/selectButton"
+        app:layout_constraintTop_toBottomOf="@id/soundTitleText"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="13dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="13dp" />
 

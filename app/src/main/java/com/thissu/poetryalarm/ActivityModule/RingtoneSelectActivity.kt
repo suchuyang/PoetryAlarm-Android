@@ -1,9 +1,7 @@
 package com.thissu.poetryalarm.ActivityModule
 
 import android.app.Activity
-import android.content.ContentResolver
-import android.database.Cursor
-import android.media.MediaPlayer
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,18 +16,11 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.widget.Button
 import com.chaopaikeji.poetryalert.Utility.DebugUtility
-import com.thissu.poetryalarm.Data.DataManager
+import com.thissu.poetryalarm.Data.*
 import com.thissu.poetryalarm.Utilitys.AudioPlayer
 import kotlin.collections.HashMap
 
-val Sound_ID = "id"//id
-val Sound_title = "title"//文件标题
-val Sound_album = "album"//专辑
-val Sound_displayName = "displayName"//播放名
-val Sound_artist = "artist"//艺术家
-val Sound_duration = "duration"//音频持续时间
-val Sound_size = "size"//文件大小
-val Sound_url = "url"//文件地址
+
 
 
 class RingtoneSelectActivity : Activity() {
@@ -52,9 +43,13 @@ class RingtoneSelectActivity : Activity() {
         findViewById(R.id.ringtoneRecyclerView) as RecyclerView
     }//循环视图
 
+
+    /** 数据变量 */
     var datalist:LinkedList<HashMap<String,String>> = LinkedList<HashMap<String,String>>()
 
     private var adapter:RingtoneListAdapter? = null
+
+    var alarm:AlarmModel? = null//当前编辑的闹钟。
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +108,7 @@ class RingtoneSelectActivity : Activity() {
             override fun onClick(v: View?) {
                 var tagPosition = v?.tag
 
-                if(tagPosition != null && tagPosition is Int){
+                if(tagPosition != null && tagPosition is Int && tagPosition != adapter!!.lastSelect){
                     //播放选中的音频
 
                     val map = datalist[tagPosition]
@@ -124,7 +119,27 @@ class RingtoneSelectActivity : Activity() {
                     if(url != null && !TextUtils.isEmpty(url)){
                         AudioPlayer.instance(application).play(url,true,false)
                     }
+
+                    //设置新的闹铃
+                    val calarm = DataManager.instance.currentAlarm
+                    if(calarm != null){
+
+                        val name = map[Sound_title]
+
+                        calarm.ringtoneName = if(name != null) name else ""
+                        calarm.ringtoneUrl = if(url != null) url else ""
+
+                    }
+
+                    //更新页面显示
+                    if(adapter!!.lastSelect >= 0){
+                        adapter!!.notifyItemChanged(adapter!!.lastSelect)
+                    }
+                    adapter!!.notifyItemChanged(tagPosition)
+
                 }
+
+
             }
         }
 
@@ -132,26 +147,8 @@ class RingtoneSelectActivity : Activity() {
 
             override fun onClick(v: View?) {
                 //选中了之后设置数据
-                val calarm = DataManager.instance.currentAlarm
-                if(calarm != null){
-
-                    var tagPosition = v?.tag
-
-                    if(tagPosition != null && tagPosition is Int){
-
-                        val map = datalist[tagPosition]
-
-                        val url = map[Sound_url]
-                        val name = map[Sound_title]
-
-                        calarm.ringtoneName = if(name != null) name else ""
-                        calarm.ringtoneUrl = if(url != null) url else ""
-
-                        AudioPlayer.instance(application).stop()
-                    }
 
 
-                }
             }
         }
 
@@ -210,10 +207,11 @@ class RingtoneSelectActivity : Activity() {
  * */
 private class RingtoneListAdapter (val datalist:LinkedList<HashMap<String,String>>): RecyclerView.Adapter<RingtoneListAdapter.RViewHolder>(){
 
-
     var mClickListener:View.OnClickListener? = null
 
     var selectButtonListener:View.OnClickListener? = null
+
+    var lastSelect:Int = -1
 
     override fun getItemCount(): Int {
         return datalist.size
@@ -221,30 +219,69 @@ private class RingtoneListAdapter (val datalist:LinkedList<HashMap<String,String
 
     override fun onBindViewHolder(holder: RViewHolder?, position: Int) {
 
+        //保证holder不为空的工作应该是在传递过来之前就做过处理，所以理论上来说我们在这里可以直接使用。当然不排除出错的情况。
+        val itemHolder:RViewHolder = holder!!
+
         val asound = datalist[position]
 
-        holder?.soundTitleText?.text = asound[Sound_title]
+        itemHolder.soundTitleText.text = asound[Sound_title]
+        itemHolder.soundTitleText.setTextColor(R.color.colorBlack)
 
-        holder?.propertyText?.text = asound[Sound_artist]+"\t"+asound[Sound_size]+"M\t"+asound[Sound_duration]
+        //音频的大小，单位先以Mb来计算
+        var soundSize = asound[Sound_size]!!.toFloat() / 1024 / 1024
+        soundSize = ((soundSize * 100).toInt() / 100).toFloat()//保留两位小数
 
-        holder?.itemView!!.tag = position
-        holder?.selectButton!!.tag = position
+        var sizeUnit = "Mb\t"
+
+        if(soundSize.toDouble() == 0.0){
+            soundSize = asound[Sound_size]!!.toFloat() / 1024
+            soundSize = ((soundSize * 100).toInt() / 100).toFloat()//保留两位小数
+            sizeUnit = "Kb\t"
+        }
+
+        //音频持续时间，从系统中取到的是毫秒单位，
+        val durationMinite = asound[Sound_duration]!!.toInt() / 1000 / 60
+
+        var durationSecond = asound[Sound_duration]!!.toInt() / 1000 % 60
+        durationSecond = (durationSecond * 100).toInt() / 100//保留两位
+
+
+        itemHolder.propertyText.text = asound[Sound_artist]+"\t"+ soundSize + sizeUnit + durationMinite + "分" + durationSecond + "秒"
+
+        itemHolder.itemView.tag = position
+        itemHolder.selectButton.tag = position
+        itemHolder.selectButton.visibility = View.GONE
 
         if(mClickListener != null){
 
-            holder!!.itemView.setOnClickListener {
-                mClickListener!!.onClick(holder!!.itemView)
+            itemHolder.itemView.setOnClickListener {
+                mClickListener!!.onClick(itemHolder.itemView)
             }
 
         }
 
         if(selectButtonListener != null){
-            holder!!.selectButton.setOnClickListener (object :View.OnClickListener{
+            itemHolder.selectButton.setOnClickListener (object :View.OnClickListener{
                 override fun onClick(v: View?) {
-                    selectButtonListener!!.onClick(holder!!.selectButton)
+                    selectButtonListener!!.onClick(itemHolder.selectButton)
                 }
 
             })
+        }
+
+        //判断是否是选中的项
+
+        var selectRingtone = DataManager.instance.currentAlarm?.ringtoneName
+
+        if(!TextUtils.isEmpty(selectRingtone)){
+
+            //铃声名相同时，设置选中
+            if(asound[Sound_title].equals(selectRingtone)){
+                lastSelect = position
+
+                itemHolder.soundTitleText.setTextColor(Color.parseColor("#00F5FF"))
+                itemHolder.selectButton.visibility = View.VISIBLE
+            }
         }
     }
 

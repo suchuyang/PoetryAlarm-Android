@@ -1,15 +1,11 @@
 package com.thissu.poetryalarm.ActivityModule
 
 import android.app.Activity
-import android.content.Intent
-import android.content.IntentFilter
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -17,19 +13,36 @@ import android.widget.Toast
 import com.thissu.poetryalarm.Data.DataManager
 import com.thissu.poetryalarm.Data.PoetryModel
 import com.thissu.poetryalarm.R
-import android.view.KeyEvent.KEYCODE_MENU
-import android.view.KeyEvent.KEYCODE_BACK
 import com.chaopaikeji.poetryalert.Utility.DebugUtility
-import com.thissu.poetryalarm.Data.AlarmModel
+import com.thissu.poetryalarm.Data.Sound_url
 import com.thissu.poetryalarm.Utilitys.AudioPlayer
 import com.thissu.poetryalarm.Utilitys.HomeKeyEventBroadCastReceiver
+import android.view.WindowManager
 
+
+val FLAG_HOMEKEY_DISPATCHED = 0x80000000.toInt()
 
 /**
  * 闹钟闹铃时展示的页面
  * */
 
 class AlarmPendingActivity : Activity() {
+
+
+/**   property */
+
+    /**导航栏*/
+    val navigationTitle: TextView by lazy {
+        findViewById(R.id.navigationTitleText) as TextView
+    }//标题
+
+    val navigationLeftButton : Button by lazy{
+        findViewById(R.id.navigationLeftButton) as Button
+    }
+
+    val navigationRightButton: Button by lazy {
+        findViewById(R.id.navigationRightButton) as Button
+    }//
 
     val nameText:TextView by lazy {
         findViewById(R.id.nameText) as TextView
@@ -59,10 +72,11 @@ class AlarmPendingActivity : Activity() {
 
     var ringtoneUrl:String = ""
 
+    var istest:Boolean = false//!<是否是测试模式，测试模式下和非测试模式显示的按钮不一样。
 
     private val receiver = HomeKeyEventBroadCastReceiver()
 
-
+    /** functions */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_pending)
@@ -78,16 +92,39 @@ class AlarmPendingActivity : Activity() {
         //获取指定的闹钟
         if(intent.hasExtra(Sound_url)){
             ringtoneUrl = intent.getStringExtra(Sound_url)
+
+            //当能从extra中取到铃声时，说明是闹钟的pending，设置istest
+            istest = false
+        }
+        else{
+            istest = true
         }
 
+
+        initToolbarElements()
 
         //注意初始化元素的操作一定要在初始化数据之后执行
         initElements()
 
+        //这个是锁屏下启动的关键代码。但是在红米3上不能实现锁屏时弹出页面，只能让屏幕亮
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or //这个在锁屏状态下
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+
+        window.setFlags(FLAG_HOMEKEY_DISPATCHED,FLAG_HOMEKEY_DISPATCHED)
+
+
+
+
     }
 
     override fun onDestroy() {
+
+        AudioPlayer.instance(DataManager.instance.applicationContext!!).stop()
+
         super.onDestroy()
+
 
     }
 
@@ -104,20 +141,16 @@ class AlarmPendingActivity : Activity() {
         }
     }
 
-
-//    override fun onAttachedToWindow() {
-//        // TODO Auto-generated method stub
-//        this.window.setType(WindowManager.LayoutParams.TYPE_KEYGUARD)
-//
-//        super.onAttachedToWindow()
-//    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+
+        DebugUtility.NSLog("press menu key")
+
         if (keyCode == KeyEvent.KEYCODE_BACK) { //监控/拦截/屏蔽返回键
-            return true
+            return false
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {//MENU键
             //监控/拦截菜单键
-            return true
+            DebugUtility.NSLog("press menu key")
+            return false
         }
         else if(keyCode == KeyEvent.KEYCODE_HOME){
             DebugUtility.NSLog("onKeyDown home key ")
@@ -125,6 +158,65 @@ class AlarmPendingActivity : Activity() {
         }
         return super.onKeyDown(keyCode, event)
     }
+
+
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+
+        DebugUtility.NSLog("press  key :${event?.keyCode}")
+
+
+        if(event?.keyCode == KeyEvent.KEYCODE_BACK){
+            return false
+        }
+        else if(event?.keyCode == KeyEvent.KEYCODE_HOME){
+            return false
+        }
+        else if(event?.keyCode == KeyEvent.KEYCODE_BACK){
+            return false
+        }
+
+        return super.dispatchKeyEvent(event)
+    }
+
+    /**
+     * 设置导航栏里的元素，包括动作
+     * */
+    fun initToolbarElements(){
+
+        if(istest){
+            navigationLeftButton.visibility = View.VISIBLE
+            navigationRightButton.visibility = View.GONE
+        }
+        else{
+            navigationLeftButton.visibility = View.GONE
+            navigationLeftButton.setText("休息10分钟")
+        }
+
+        navigationLeftButton.setOnClickListener {
+            if(istest){
+
+                finish()
+            }
+            else{
+                //推送一个十分钟后的通知
+            }
+
+        }
+
+//        navigationTitle.text = DataManager.instance.currentDevice?.serialNumber
+
+        navigationRightButton.setOnClickListener {
+
+
+            finish()
+
+        }
+    }
+
+
+
+
+
 
     /**
      * 初始化页面元素
@@ -173,7 +265,9 @@ class AlarmPendingActivity : Activity() {
 
 
         //提示答案
-        answerEdit.hint = poetry!!.answer
+        if(istest){
+            answerEdit.hint = poetry!!.answer
+        }
 
     }// end of initElements
 
@@ -207,7 +301,9 @@ class AlarmPendingActivity : Activity() {
 
             AudioPlayer.instance(DataManager.instance.applicationContext!!).stop()
 
-            finish()
+            //设置导航栏的按钮
+            navigationRightButton.visibility = View.VISIBLE
+            navigationLeftButton.visibility = View.GONE
         }
         else{
             Toast.makeText(this,"答案不对",Toast.LENGTH_SHORT).show()

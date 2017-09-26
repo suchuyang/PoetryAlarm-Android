@@ -13,7 +13,7 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import com.thissu.poetryalarm.ActivityModule.AlarmPendingActivity
-import com.thissu.poetryalarm.ActivityModule.Sound_url
+
 
 
 /**
@@ -76,6 +76,26 @@ class DataManager private constructor(){
 
         }
     }
+
+    /**
+     * 删除指定位置的闹钟
+     * */
+    fun deleteAlarmAtIndex(index: Int){
+
+        //首先移除闹钟的通知
+        if (index < alarmList.count()) {
+            val delAlarm = alarmList[index]
+
+            closeAlarmNotification(alarm = delAlarm)
+
+            alarmList.removeAt(index)
+        }
+        else{
+            DebugUtility.NSLog("数组越界")
+        }
+
+    }
+
 
     /**
      * 保存，把数组保存到文件中去。
@@ -213,8 +233,9 @@ class DataManager private constructor(){
                 //推送闹钟
                 val intent = Intent(applicationContext , AlarmPendingActivity::class.java)
 
-                //设置闹钟的闹铃
+                //设置闹钟的闹铃和页面测试模式
                 intent.putExtra(Sound_url,alarm.ringtoneUrl)
+
 
                 /**
                  * 第二个参数requestCode相同的话后面的定时器会将前面的定时器"覆盖"掉，只会启动最后一个定时器，所以同一时间的定时器可以用同一个requestCode，不同时间的定时器用不同的requestCode。
@@ -222,16 +243,12 @@ class DataManager private constructor(){
 
                 val pendingintent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
+                //设置闹钟
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     alarmManager.setWindow(AlarmManager.RTC_WAKEUP, alarmTime,
                             60*1000, pendingintent)
                 } else {
                     alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime, pendingintent)
-//                    if (flag == 0) {
-//                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender)
-//                    } else {
-//                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calMethod(week, calendar.getTimeInMillis()), intervalMillis, sender)
-//                    }
                 }
 
                 Toast.makeText(applicationContext,"闹钟会在${cal.get(Calendar.MONTH) + 1}月" +
@@ -248,12 +265,37 @@ class DataManager private constructor(){
 
         }//end of open
         else{
-            //去掉这个alarm注册的闹钟服务
+            //去掉这个alarm注册的闹钟服务,
+
+            closeAlarmNotification(alarm = alarm)
         }
 
         save()
 
     }//end of openOrCloseAlarm
+
+    /**
+     * 删除闹钟对应的通知
+     * @param alarm:闹钟
+     *
+     * */
+    fun closeAlarmNotification(alarm: AlarmModel){
+
+        val alarmManager = applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+
+        //推送闹钟
+        val intent = Intent(applicationContext , AlarmPendingActivity::class.java)
+
+        /**
+         * 第二个参数requestCode相同的话后面的定时器会将前面的定时器"覆盖"掉，只会启动最后一个定时器，所以同一时间的定时器可以用同一个requestCode，不同时间的定时器用不同的requestCode。
+         */
+
+        val pendingintent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+        alarmManager.cancel(pendingintent)
+    }
+
 
     //
     /**
